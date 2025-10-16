@@ -6,79 +6,62 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(120deg, #f0f4ff, #dfe9f3);
+      background: #f4f4f4;
       margin: 0;
       padding: 0;
     }
     .container {
-      max-width: 650px;
-      margin: 50px auto;
+      max-width: 600px;
+      margin: 40px auto;
       background: #fff;
-      padding: 30px 40px;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      animation: fadeIn 0.6s ease;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     h1 {
       text-align: center;
       color: #2a7ae2;
-      font-size: 1.8em;
-      margin-bottom: 25px;
     }
     .competence {
       margin: 20px 0;
       padding: 15px;
       background: #e8f0fe;
-      border-left: 6px solid #2a7ae2;
-      border-radius: 10px;
-      transition: all 0.3s ease;
+      border-radius: 8px;
     }
     .validated {
       background: #b2f2bb;
-      border-left-color: #34a853;
     }
     button {
       background: #2a7ae2;
       color: #fff;
       border: none;
-      padding: 8px 14px;
+      padding: 10px 20px;
       border-radius: 5px;
       cursor: pointer;
-      margin-top: 8px;
-      font-size: 0.9em;
-      transition: background 0.3s ease;
-    }
-    button:hover:not(:disabled) {
-      background: #1f5ec2;
     }
     button:disabled {
       background: #ccc;
-      cursor: not-allowed;
     }
     .end-message {
       text-align: center;
       font-size: 1.3em;
       color: #388e3c;
-      margin-top: 40px;
-      font-weight: bold;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      margin-top: 30px;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <h1>🎯 Développer mes compétences</h1>
+    <h1>Développer mes compétences</h1>
     <div id="game"></div>
     <div id="end" class="end-message" style="display:none;">
-      🎉 Félicitations ! Vous avez validé toutes les compétences !
+      Félicitations ! Vous avez validé toutes les compétences !
     </div>
   </div>
 
   <script>
-    // --- Liste des compétences et scénarios ---
+    // --- Scénarios de compétences ---
     const competences = [
       {
         nom: "Communication",
@@ -114,50 +97,26 @@
       }
     ];
 
-    let valides = Array(competences.length).fill(false);
+    let validees = Array(competences.length).fill(false);
 
-    // --- Fonction d'affichage du jeu ---
+    // --- Fonction d’affichage du jeu ---
     function renderGame() {
       const gameDiv = document.getElementById('game');
       gameDiv.innerHTML = '';
+
       competences.forEach((comp, idx) => {
         const compDiv = document.createElement('div');
-        compDiv.className = 'competence' + (valides[idx] ? ' validated' : '');
+        compDiv.className = 'competence' + (validees[idx] ? ' validated' : '');
         compDiv.innerHTML = `<strong>${comp.nom}</strong><br>${comp.scenario}`;
-        
-        if (!valides[idx]) {
+
+        if (!validees[idx]) {
           comp.options.forEach(opt => {
             const btn = document.createElement('button');
             btn.textContent = opt.texte;
             btn.onclick = () => {
               if (opt.correct) {
-                valides[idx] = true;
+                validees[idx] = true;
                 renderGame();
                 checkEnd();
               } else {
                 btn.disabled = true;
-                btn.style.background = '#e57373';
-              }
-            };
-            compDiv.appendChild(document.createElement('br'));
-            compDiv.appendChild(btn);
-          });
-        } else {
-          compDiv.innerHTML += "<br><em>✅ Compétence validée !</em>";
-        }
-        gameDiv.appendChild(compDiv);
-      });
-    }
-
-    // --- Vérifie si toutes les compétences sont validées ---
-    function checkEnd() {
-      if (valides.every(v => v)) {
-        document.getElementById('end').style.display = 'block';
-      }
-    }
-
-    // --- Lancement du jeu ---
-    renderGame();
-  </script>
-</body>
-</html>
